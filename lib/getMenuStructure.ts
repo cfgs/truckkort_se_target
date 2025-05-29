@@ -27,9 +27,14 @@ function buildMenuTree(dir: string, baseDir = dir): MenuItem[] {
       }
     } else if (entry.isFile() && entry.name.endsWith(".mdx")) {
       const relPath = path.relative(baseDir, fullPath).replace(/\.mdx$/, "");
+      let href = "/" + relPath.replace(/\\/g, "/");
+      // Om filen är startsida.mdx, sätt href till "/"
+      if (relPath.toLowerCase() === "startsida") {
+        href = "/";
+      }
       menu.push({
         label: formatTitle(entry.name),
-        href: "/" + relPath.replace(/\\/g, "/"),
+        href,
       });
     }
   }

@@ -1,1 +1,2 @@
-*.mdoc
+content/*.mdx
+content/**/*.mdx

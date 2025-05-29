@@ -124,6 +124,7 @@
 
 h1 {
   @apply text-4xl font-bold;
+  @apply mb-6;
 }
 
 h2 {
@@ -148,4 +149,5 @@ h3 {
 
 p {
   @apply text-2xl leading-8 mb-6;
+  @apply mb-6;
 }
