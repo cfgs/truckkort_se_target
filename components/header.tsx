@@ -79,12 +79,11 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
   }
 
   return (
-    <nav className="bg-white h-16 md:px-4">
-      <div className="flex justify-between items-center h-full">
+    <nav className="bg-white h-16 ">
+      <div className="flex justify-between items-center h-full px-4 border-b border-b-gray-300">
         {/* Hamburger Menu for Mobile */}
         <div className="md:hidden items-center">
           <Button
-            variant="none"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="text-slate-800 focus:outline-none"
           >
@@ -105,7 +104,7 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
         </div>
         {/* Logo */}
         <div className="flex-1 text-center md:text-left">
-          <div className="text-slate-800 text-lg font-bold">
+          <div className="text-slate-800 font-bold text-2xl">
             <Link href="/">truckkort.se</Link>
           </div>
         </div>

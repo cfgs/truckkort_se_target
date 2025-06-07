@@ -4,6 +4,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
 import path from "path";
 
+import ForkliftCourses from "@/components/ForkliftCourses";
 import Image from "next/image";
 
 // 1. Metadata-funktion för Next.js
@@ -13,8 +14,9 @@ export async function generateMetadata({
 }: {
   params: { slug?: string[] };
 }) {
+  // 👇 This is crucial!
   const { slug } = await params;
-  const slugArray = slug ?? ["start"];
+  const slugArray = slug ?? ["startsida"];
   const mdxPath = path.join(process.cwd(), "content", ...slugArray) + ".mdx";
   if (!fs.existsSync(mdxPath)) return {};
 
@@ -23,6 +25,7 @@ export async function generateMetadata({
 
   return {
     title: data.title || "truckkort.se",
+    description: data.description,
   };
 }
 
@@ -33,7 +36,6 @@ export default async function Page({
 }: {
   params: { slug?: string[] };
 }) {
-  // Om ingen slug: visa startsida.mdx
   const { slug } = await params;
   const slugArray = slug ?? ["startsida"];
   const mdxPath = path.join(process.cwd(), "content", ...slugArray) + ".mdx";
@@ -45,9 +47,15 @@ export default async function Page({
   const source = fs.readFileSync(mdxPath, "utf8");
   const { content } = matter(source);
 
-  return (
-    <div className="prose prose-lg max-w-none">
-      <MDXRemote source={content} components={{ Image }} />
-    </div>
-  );
+  const remote = () => {
+    if (!slug) return <MDXRemote source={content} components={{ Image }} />;
+
+    if (slug[0] === "truckkort" && slug.length === 1) {
+      return (
+        <MDXRemote source={content} components={{ Image, ForkliftCourses }} />
+      );
+    }
+  };
+
+  return <div className="prose prose-lg max-w-none">{remote()}</div>;
 }
