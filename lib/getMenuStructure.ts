@@ -1,10 +1,12 @@
 import fs from "fs";
+import matter from "gray-matter";
 import path from "path";
 
 export interface MenuItem {
   label: string;
   href?: string;
   children?: MenuItem[];
+  menuDisplay?: string;
 }
 
 function formatTitle(filename: string) {
@@ -32,12 +34,19 @@ function buildMenuTree(dir: string, baseDir = dir): MenuItem[] {
       if (relPath.toLowerCase() === "startsida") {
         href = "/";
       }
+
+      // Läs frontmatter
+      const fileContent = fs.readFileSync(fullPath, "utf8");
+      const { data } = matter(fileContent);
+
       menu.push({
         label: formatTitle(entry.name),
         href,
+        menuDisplay: data.menuDisplay,
       });
     }
   }
+  console.log(menu);
   return menu;
 }
 

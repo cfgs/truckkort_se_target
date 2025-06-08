@@ -77,14 +77,18 @@ export default async function ForkliftCourses() {
                     <Card className="flex flex-col md:flex-row shadow-lg border border-orange-200 py-0! gap-0!">
                       {/* Date badge */}
                       <div className="flex flex-col items-center justify-center bg-orange-100 px-4 py-4 rounded-t-md md:rounded-l-md md:rounded-tr-none md:rounded-br-none min-w-[100px]">
-                        <span className="font-extrabold text-3xl text-orange-600 leading-tight">
-                          {day}
+                        <div className="md:flex flex-rows md:flex-col inline-block align-bottom">
+                          <span className="md:text-center md:font-extrabold text-xl md:text-3xl text-orange-600 leading-tight">
+                            {day}{" "}
+                          </span>
+                          <span className=" uppercase text-xl text-orange-700">
+                            {month}
+                          </span>
+                        </div>
+                        <span className="hidden md:block text-xs text-orange-500">
+                          {year}
                         </span>
-                        <span className="uppercase text-sm text-orange-700">
-                          {month}
-                        </span>
-                        <span className="text-xs text-orange-500">{year}</span>
-                        <span className="uppercase text-sm text-orange-700">
+                        <span className="uppercase text-base text-orange-700">
                           {course.time}
                         </span>
                       </div>

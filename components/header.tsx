@@ -22,8 +22,13 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
   function renderMenu(items: MenuItem[], parentKey = "") {
     return items.map((item, idx) => {
       const key = `${parentKey}${item.label}-${idx}`;
+      const displayName = item.menuDisplay || item.label;
+
+      if (["Om oss", "Truckkort"].includes(displayName)) return null;
+
       if (item.children && item.children.length > 0) {
         const isOpen = openDropdown === key;
+
         return (
           <li
             key={key}
@@ -39,7 +44,7 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
                   href={item.href || "#"}
                   className="text-slate-800 focus:outline-none flex items-center h-full text-xl"
                 >
-                  {item.label}
+                  {displayName}
                   <span className="ml-1">
                     {isOpen ? (
                       <ChevronUp size={18} />
@@ -56,7 +61,7 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
                       href={child.href || "#"}
                       className="block w-full p-2 text-gray-800 text-xl"
                     >
-                      {child.label}
+                      {child.menuDisplay || child.label}
                     </Link>
                   </DropdownMenuItem>
                 ))}
@@ -71,7 +76,7 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
             href={item.href || "#"}
             className="text-slate-800 focus:outline-none flex items-center h-full text-xl"
           >
-            {item.label}
+            {displayName}
           </Link>
         </li>
       );
@@ -95,11 +100,16 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
               "absolute w-full bg-slate-400 p-4 mt-3 text-slate-800"
             )}
           >
-            {menuItems.map((item, idx) => (
-              <li key={idx}>
-                <Link href={item.href || "#"}>{item.label}</Link>
-              </li>
-            ))}
+            {menuItems.map((item, idx) => {
+              const displayName = item.menuDisplay || item.label;
+              if (["Om oss", "Truckkort"].includes(displayName)) return null;
+
+              return (
+                <li key={idx}>
+                  <Link href={item.href || "#"}>{displayName}</Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
         {/* Logo */}

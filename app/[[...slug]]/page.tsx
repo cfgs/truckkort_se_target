@@ -54,6 +54,8 @@ export default async function Page({
       return (
         <MDXRemote source={content} components={{ Image, ForkliftCourses }} />
       );
+    } else {
+      return <MDXRemote source={content} components={{ Image }} />;
     }
   };
 
