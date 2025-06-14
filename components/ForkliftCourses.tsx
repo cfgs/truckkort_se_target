@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getTruckutbildningar } from "@/lib/getTruckutbildningar";
+import { GB, SE } from "country-flag-icons/react/3x2";
+import Link from "next/link";
 import { Button } from "./ui/button";
 
 export interface Course {
@@ -55,6 +57,36 @@ function formatDateSwedish(dateString: string) {
   const year = date.getFullYear();
   return { day, month, year };
 }
+
+function LanguageSpan({ language }: { language: string }) {
+  if (language.toLowerCase() === "svenska") {
+    return (
+      <span className="inline-flex items-center gap-1">
+        <SE title="Svenska" className="w-3 h-auto rounded-sm" />
+        Svenska
+      </span>
+    );
+  }
+  if (language.toLowerCase() === "engelska") {
+    return (
+      <span className="inline-flex items-center gap-1">
+        <GB title="English" className="w-3 h-auto rounded-sm" />
+        Engelska
+      </span>
+    );
+  }
+  // fallback
+  return <span>{language}</span>;
+}
+
+const educator = (course: Course) => {
+  switch (course.provider.toLowerCase()) {
+    case "truckutbildarna":
+      return `https://www.truckutbildarna.se/?gad_source=1&gad_campaignid=2049549506&gbraid=0AAAAACty9YSzVM7HqrKRP46RxSd4KVZAO&gclid=Cj0KCQjwu7TCBhCYARIsAM_S3NiBDCnKH2umGpbQggprBBHVIYP-wZX60QtU3tTlpeByutNhrtbmDqUaAt7XEALw_wcB#boka`;
+    default:
+      return "";
+  }
+};
 
 export default async function ForkliftCourses() {
   const courses: Course[] = (await getTruckutbildningar()) as Course[];
@@ -119,13 +151,21 @@ export default async function ForkliftCourses() {
                             {course.city}
                           </span>
                           <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
-                            {course.language}
+                            <LanguageSpan language={course.language} />
                           </span>
                           <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
                             {course.available_seats} platser kvar
                           </span>
                         </div>
-                        <Button variant={"orange"}>BOKA HÄR</Button>
+                        <Button asChild variant={"orange"}>
+                          <Link
+                            href={educator(course)}
+                            target="_blank"
+                            style={{ border: "none" }}
+                          >
+                            BOKA HÄR
+                          </Link>
+                        </Button>
                       </div>
                     </Card>
                   </li>

@@ -46,7 +46,6 @@ function buildMenuTree(dir: string, baseDir = dir): MenuItem[] {
       });
     }
   }
-  console.log(menu);
   return menu;
 }
 
