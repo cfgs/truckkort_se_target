@@ -95,7 +95,7 @@ export default async function ForkliftCourses() {
   return (
     <>
       {Object.entries(cityMap)
-        .filter(([_, cityCourses]) => cityCourses.length > 0)
+        .filter(([, cityCourses]) => cityCourses.length > 0)
         .map(([city, cityCourses]) => (
           <div key={city} className="mb-8">
             <h2 className="text-2xl font-bold mb-4">{city}</h2>
