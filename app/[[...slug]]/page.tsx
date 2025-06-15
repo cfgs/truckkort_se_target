@@ -7,14 +7,8 @@ import path from "path";
 import ForkliftCourses from "@/components/ForkliftCourses";
 import Image from "next/image";
 
-// 1. Metadata-funktion för Next.js
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug?: string[] };
-}) {
-  // 👇 This is crucial!
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function generateMetadata({ params }: any) {
   const { slug } = await params;
   const slugArray = slug ?? ["startsida"];
   const mdxPath = path.join(process.cwd(), "content", ...slugArray) + ".mdx";
@@ -29,13 +23,8 @@ export async function generateMetadata({
   };
 }
 
-// 2. Din page-komponent
-
-export default async function Page({
-  params,
-}: {
-  params: { slug?: string[] };
-}) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default async function Page({ params }: any) {
   const { slug } = await params;
   const slugArray = slug ?? ["startsida"];
   const mdxPath = path.join(process.cwd(), "content", ...slugArray) + ".mdx";
