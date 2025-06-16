@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import clsx from "clsx";
-import { ChevronDown, ChevronUp, Menu, X } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -90,23 +90,88 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
         <div className="md:hidden items-center">
           <Button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-slate-800 focus:outline-none"
+            className="bg-white border border-black rounded-md p-2 focus:outline-none"
+            style={{
+              minWidth: 44,
+              minHeight: 44,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            {isMobileMenuOpen ? <X /> : <Menu />}
+            {isMobileMenuOpen ? (
+              // X icon (close)
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                stroke="black"
+                strokeWidth="2"
+                fill="none"
+              >
+                <line x1="6" y1="6" x2="18" y2="18" />
+                <line x1="6" y1="18" x2="18" y2="6" />
+              </svg>
+            ) : (
+              // Hamburger icon
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                stroke="black"
+                strokeWidth="2"
+                fill="none"
+              >
+                <line x1="4" y1="7" x2="20" y2="7" />
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <line x1="4" y1="17" x2="20" y2="17" />
+              </svg>
+            )}
           </Button>
           <ul
             className={clsx(
               isMobileMenuOpen ? "md:hidden" : "hidden",
-              "absolute w-full bg-slate-400 p-4 mt-3 text-slate-800"
+              "absolute left-0 right-0 w-full m-0 p-0 bg-slate-200 mt-3 text-slate-800"
             )}
           >
             {menuItems.map((item, idx) => {
               const displayName = item.menuDisplay || item.label;
               if (["Om oss", "Truckkort"].includes(displayName)) return null;
 
+              if (item.children && item.children.length > 0) {
+                // Parent with children: show label, then children as links
+                return (
+                  <li key={idx} className="mb-2">
+                    <span className="font-semibold block py-2 px-4">
+                      {displayName}
+                    </span>
+                    <ul className="">
+                      {item.children.map((child, cidx) => (
+                        <li key={cidx}>
+                          <Link
+                            href={child.href || "#"}
+                            className="block py-2 px-6"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {child.menuDisplay || child.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                );
+              }
+
+              // No children: clickable link
               return (
                 <li key={idx}>
-                  <Link href={item.href || "#"}>{displayName}</Link>
+                  <Link
+                    href={item.href || "#"}
+                    className="block pt-4 pb-2 px-4"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {displayName}
+                  </Link>
                 </li>
               );
             })}
