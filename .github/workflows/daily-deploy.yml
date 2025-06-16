@@ -24,6 +24,11 @@ jobs:
       - name: Build Next.js app
         run: npm run build
 
+      - name: Generate AI .mdx content
+        run: node scripts/generate-mdx.js
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
       - name: Deploy (custom step)
         run: echo "Här lägger du in ditt deploy-kommando, t.ex. vercel --prod"
 
