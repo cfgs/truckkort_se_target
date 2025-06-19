@@ -25,7 +25,7 @@ jobs:
         run: npm run build
 
       - name: Generate AI .mdx content
-        run: node scripts/generate-mdx.js
+        run: npx ts-node scripts/generate-mdx.ts
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 

@@ -24,7 +24,8 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
       const key = `${parentKey}${item.label}-${idx}`;
       const displayName = item.menuDisplay || item.label;
 
-      if (["Om oss", "Truckkort"].includes(displayName)) return null;
+      if (["Om oss", "Truckkort", "Truckkort-skara"].includes(displayName))
+        return null;
 
       if (item.children && item.children.length > 0) {
         const isOpen = openDropdown === key;

@@ -4,6 +4,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
 import path from "path";
 
+import Faq from "@/components/faq/Faq";
 import ForkliftCourses from "@/components/ForkliftCourses";
 import Image from "next/image";
 
@@ -41,7 +42,10 @@ export default async function Page({ params }: any) {
 
     if (slug[0] === "truckkort" && slug.length === 1) {
       return (
-        <MDXRemote source={content} components={{ Image, ForkliftCourses }} />
+        <MDXRemote
+          source={content}
+          components={{ Image, ForkliftCourses, Faq }}
+        />
       );
     } else {
       return <MDXRemote source={content} components={{ Image }} />;
