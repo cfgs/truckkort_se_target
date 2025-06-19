@@ -93,7 +93,7 @@ export default async function ForkliftCourses() {
   const cityMap = groupByCityAndSort(courses);
 
   return (
-    <>
+    <div id="lediga-kursdatum">
       {Object.entries(cityMap)
         .filter(([, cityCourses]) => cityCourses.length > 0)
         .map(([city, cityCourses]) => (
@@ -174,6 +174,6 @@ export default async function ForkliftCourses() {
             </ul>
           </div>
         ))}
-    </>
+    </div>
   );
 }
