@@ -26,6 +26,15 @@ export interface Course {
   updated: string;
 }
 
+// Utility to normalize city names for comparison
+function normalizeCityName(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/å/g, "a")
+    .replace(/ä/g, "a")
+    .replace(/ö/g, "o");
+}
+
 function groupByCityAndSort(courses: Course[]) {
   // Filter so course_name contains "truck" (case-insensitive)
   const filtered = courses.filter(
@@ -88,13 +97,27 @@ const educator = (course: Course) => {
   }
 };
 
-export default async function ForkliftCourses() {
+interface ForkliftCoursesProps {
+  city?: string; // lowercase, å/ä = a, ö = o
+}
+
+export default async function ForkliftCourses({
+  city,
+}: ForkliftCoursesProps = {}) {
   const courses: Course[] = (await getTruckutbildningar()) as Course[];
   const cityMap = groupByCityAndSort(courses);
 
+  // If city prop is provided, filter to only that city (normalize for comparison)
+  let filteredEntries = Object.entries(cityMap);
+  if (city) {
+    filteredEntries = filteredEntries.filter(([cityName]) => {
+      return normalizeCityName(cityName) === city;
+    });
+  }
+
   return (
     <div id="lediga-kursdatum">
-      {Object.entries(cityMap)
+      {filteredEntries
         .filter(([, cityCourses]) => cityCourses.length > 0)
         .map(([city, cityCourses]) => (
           <div key={city} className="mb-8">

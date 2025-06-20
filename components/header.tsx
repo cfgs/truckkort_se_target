@@ -14,18 +14,40 @@ import { useState } from "react";
 
 import type { MenuItem } from "../lib/getMenuStructure";
 
+// Define which menu items to show in the menu, and their order
+const MENU_DISPLAY_WHITELIST = [
+  "Startsida",
+  "Truckar",
+  "Trucktyper",
+  "Om oss",
+  // Lägg till fler som ska visas i menyn, i önskad ordning
+];
+
 export function Header({ menuItems }: { menuItems: MenuItem[] }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-  // Helper to render menu recursively
-  function renderMenu(items: MenuItem[], parentKey = "") {
-    return items.map((item, idx) => {
+  // Helper to flatten and index menu items by display name
+  function flattenMenuItems(items: MenuItem[]): Record<string, MenuItem> {
+    const map: Record<string, MenuItem> = {};
+    for (const item of items) {
+      const displayName = item.menuDisplay || item.label;
+      map[displayName] = item;
+      if (item.children && item.children.length > 0) {
+        for (const child of item.children) {
+          const childDisplayName = child.menuDisplay || child.label;
+          map[childDisplayName] = child;
+        }
+      }
+    }
+    return map;
+  }
+
+  // Helper to render menu recursively (for desktop)
+  function renderMenu(orderedItems: MenuItem[], parentKey = "") {
+    return orderedItems.map((item, idx) => {
       const key = `${parentKey}${item.label}-${idx}`;
       const displayName = item.menuDisplay || item.label;
-
-      if (["Om oss", "Truckkort", "Truckkort-skara"].includes(displayName))
-        return null;
 
       if (item.children && item.children.length > 0) {
         const isOpen = openDropdown === key;
@@ -84,6 +106,12 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
     });
   }
 
+  // Prepare ordered menu items for desktop and mobile
+  const menuItemMap = flattenMenuItems(menuItems);
+  const orderedMenuItems = MENU_DISPLAY_WHITELIST.map(
+    (displayName) => menuItemMap[displayName]
+  ).filter(Boolean);
+
   return (
     <nav className="bg-white h-16 ">
       <div className="flex justify-between items-center h-full px-4 border-b border-b-gray-300">
@@ -135,9 +163,9 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
               "absolute left-0 right-0 w-full m-0 p-0 bg-slate-200 mt-3 text-slate-800"
             )}
           >
-            {menuItems.map((item, idx) => {
+            {orderedMenuItems.map((item, idx) => {
+              if (!item) return null;
               const displayName = item.menuDisplay || item.label;
-              if (["Om oss", "Truckkort"].includes(displayName)) return null;
 
               if (item.children && item.children.length > 0) {
                 // Parent with children: show label, then children as links
@@ -190,7 +218,7 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
             "hidden md:flex md:flex-row space-x-4 md:block h-full flex items-center"
           )}
         >
-          {renderMenu(menuItems)}
+          {renderMenu(orderedMenuItems)}
         </ul>
       </div>
     </nav>
