@@ -110,93 +110,132 @@ export default async function ForkliftCourses({
   // If city prop is provided, filter to only that city (normalize for comparison)
   let filteredEntries = Object.entries(cityMap);
   if (city) {
-    filteredEntries = filteredEntries.filter(([cityName]) => {
-      return normalizeCityName(cityName) === city;
-    });
+    // Special case for Stockholm: include multiple cities
+    if (city === "stockholm") {
+      const stockholmCities = ["stockholm", "hagersten", "jordbro"];
+      filteredEntries = filteredEntries.filter(([cityName]) =>
+        stockholmCities.includes(normalizeCityName(cityName))
+      );
+    }
+    // Special case for Jönköping: include Jönköping and Taberg
+    else if (city === "jonkoping") {
+      const jonkopingCities = ["jonkoping", "taberg"];
+      filteredEntries = filteredEntries.filter(([cityName]) =>
+        jonkopingCities.includes(normalizeCityName(cityName))
+      );
+    } else {
+      filteredEntries = filteredEntries.filter(([cityName]) => {
+        return normalizeCityName(cityName) === city;
+      });
+    }
   }
+
+  // Check if there are any courses to show
+  const hasCourses =
+    filteredEntries.filter(([, cityCourses]) => cityCourses.length > 0).length >
+    0;
 
   return (
     <div id="lediga-kursdatum">
-      {filteredEntries
-        .filter(([, cityCourses]) => cityCourses.length > 0)
-        .map(([city, cityCourses]) => (
-          <div key={city} className="mb-8">
-            <h2 className="text-2xl font-bold mb-4">{city}</h2>
-            <ul className="grid gap-6 p-0 list-none md:grid-cols-3">
-              {cityCourses.map((course) => {
-                const { day, month, year } = formatDateSwedish(
-                  course.date_start
-                );
-                return (
-                  <li key={course.id}>
-                    <Card className="flex flex-col md:flex-row shadow-lg border border-orange-200 py-0! gap-0!">
-                      {/* Date badge */}
-                      <div className="flex flex-col items-center justify-center bg-orange-100 px-4 py-4 rounded-t-md md:rounded-l-md md:rounded-tr-none md:rounded-br-none min-w-[100px]">
-                        <div className="md:flex flex-rows md:flex-col inline-block align-bottom">
-                          <span className="md:text-center md:font-extrabold text-xl md:text-3xl text-orange-600 leading-tight">
-                            {day}{" "}
+      {hasCourses ? (
+        filteredEntries
+          .filter(([, cityCourses]) => cityCourses.length > 0)
+          .map(([city, cityCourses]) => (
+            <div key={city} className="mb-8">
+              <h2 className="text-2xl font-bold mb-4">{city}</h2>
+              <ul className="grid gap-6 p-0 list-none md:grid-cols-3">
+                {cityCourses.map((course) => {
+                  const { day, month, year } = formatDateSwedish(
+                    course.date_start
+                  );
+                  return (
+                    <li key={course.id}>
+                      <Card className="flex flex-col md:flex-row shadow-lg border border-orange-200 py-0! gap-0!">
+                        {/* Date badge */}
+                        <div className="flex flex-col items-center justify-center bg-orange-100 px-4 py-4 rounded-t-md md:rounded-l-md md:rounded-tr-none md:rounded-br-none min-w-[100px]">
+                          <div className="md:flex flex-rows md:flex-col inline-block align-bottom">
+                            <span className="md:text-center md:font-extrabold text-xl md:text-3xl text-orange-600 leading-tight">
+                              {day}{" "}
+                            </span>
+                            <span className=" uppercase text-xl text-orange-700">
+                              {month}
+                            </span>
+                          </div>
+                          <span className="hidden md:block text-xs text-orange-500">
+                            {year}
                           </span>
-                          <span className=" uppercase text-xl text-orange-700">
-                            {month}
+                          <span className="uppercase text-base text-orange-700">
+                            {course.time}
                           </span>
                         </div>
-                        <span className="hidden md:block text-xs text-orange-500">
-                          {year}
-                        </span>
-                        <span className="uppercase text-base text-orange-700">
-                          {course.time}
-                        </span>
-                      </div>
-                      {/* Main content */}
-                      <div className="flex-1 flex flex-col justify-between p-4">
-                        <div className="mb-2">
-                          <CardHeader className="p-0! mb-2 gap-0!">
-                            <CardTitle className="text-xl text-orange-900">
-                              <h4>{course.course_name}</h4>
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent className="p-0!">
-                            <div className="mb-2 text-gray-700 text-lg leading-5.5">
-                              {course.course_description}
-                            </div>
-                            <div className="flex flex-wrap text-base text-gray-700">
-                              <span>
-                                <strong>Pris:</strong>{" "}
-                                <span className="text-orange-700 font-semibold">
-                                  {course.price} kr
+                        {/* Main content */}
+                        <div className="flex-1 flex flex-col justify-between p-4">
+                          <div className="mb-2">
+                            <CardHeader className="p-0! mb-2 gap-0!">
+                              <CardTitle className="text-xl text-orange-900">
+                                <h4>{course.course_name}</h4>
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-0!">
+                              <div className="mb-2 text-gray-700 text-lg leading-5.5">
+                                {course.course_description}
+                              </div>
+                              <div className="flex flex-wrap text-base text-gray-700">
+                                <span>
+                                  <strong>Pris:</strong>{" "}
+                                  <span className="text-orange-700 font-semibold">
+                                    {course.price} kr
+                                  </span>
                                 </span>
-                              </span>
-                            </div>
-                          </CardContent>
+                              </div>
+                            </CardContent>
+                          </div>
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            <span className="inline-block bg-orange-200 text-orange-800 text-xs px-2 py-1 rounded">
+                              {course.city}
+                            </span>
+                            <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
+                              <LanguageSpan language={course.language} />
+                            </span>
+                            <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
+                              {course.available_seats} platser kvar
+                            </span>
+                          </div>
+                          <Button asChild variant={"orange"}>
+                            <Link
+                              href={educator(course)}
+                              target="_blank"
+                              style={{ border: "none" }}
+                            >
+                              BOKA HÄR
+                            </Link>
+                          </Button>
                         </div>
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          <span className="inline-block bg-orange-200 text-orange-800 text-xs px-2 py-1 rounded">
-                            {course.city}
-                          </span>
-                          <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
-                            <LanguageSpan language={course.language} />
-                          </span>
-                          <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
-                            {course.available_seats} platser kvar
-                          </span>
-                        </div>
-                        <Button asChild variant={"orange"}>
-                          <Link
-                            href={educator(course)}
-                            target="_blank"
-                            style={{ border: "none" }}
-                          >
-                            BOKA HÄR
-                          </Link>
-                        </Button>
-                      </div>
-                    </Card>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
+                      </Card>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))
+      ) : (
+        <div className="my-8 flex justify-center">
+          <Card className="w-full border-orange-200 shadow-lg bg-orange-50">
+            <CardHeader>
+              <CardTitle>Inga planerade kurstillfällen</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-2">
+                Just nu finns det inga planerade kurstillfällen.
+              </p>
+              <p>
+                Vill du utbilda din personal på ditt företag? Kontakta oss så
+                kan vi göra en specialanpassad utbildning för er.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
