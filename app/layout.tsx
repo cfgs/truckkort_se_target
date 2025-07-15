@@ -27,10 +27,9 @@ export default function RootLayout({
   return (
     <html lang="sv">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${leagueSpartan.variable} antialiased`}
-      >
+        className={`${geistSans.variable} ${geistMono.variable} ${leagueSpartan.variable} antialiased`}>
         <HeaderWrapper />
-        <main className="content-wrapper container mx-auto p-4 lg:px-38 lg:py-8 text-2xl">
+        <main className="mt-12 content-wrapper container mx-auto p-4 lg:px-38 lg:py-8 text-2xl">
           {children}
         </main>
         <Footer />

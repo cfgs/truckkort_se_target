@@ -56,17 +56,14 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
           <li
             key={key}
             className="relative group h-full"
-            onMouseLeave={() => setOpenDropdown(null)}
-          >
+            onMouseLeave={() => setOpenDropdown(null)}>
             <DropdownMenu open={isOpen}>
               <DropdownMenuTrigger
                 onMouseEnter={() => setOpenDropdown(key)}
-                asChild
-              >
+                asChild>
                 <Link
                   href={item.href || "#"}
-                  className="text-slate-800 focus:outline-none flex items-center h-full text-xl"
-                >
+                  className="text-slate-800 focus:outline-none flex items-center h-full text-xl">
                   {displayName}
                   <span className="ml-1">
                     {isOpen ? (
@@ -82,8 +79,7 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
                   <DropdownMenuItem key={`${key}-child-${cidx}`}>
                     <Link
                       href={child.href || "#"}
-                      className="block w-full p-2 text-gray-800 text-xl"
-                    >
+                      className="block w-full p-2 text-gray-800 text-xl">
                       {child.menuDisplay || child.label}
                     </Link>
                   </DropdownMenuItem>
@@ -97,8 +93,7 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
         <li key={key} className="relative group h-full">
           <Link
             href={item.href || "#"}
-            className="text-slate-800 focus:outline-none flex items-center h-full text-xl"
-          >
+            className="text-slate-800 focus:outline-none flex items-center h-full text-xl">
             {displayName}
           </Link>
         </li>
@@ -113,7 +108,12 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
   ).filter(Boolean);
 
   return (
-    <nav className="bg-white h-16 ">
+    <nav className="bg-white h-16">
+      <div className="p-2 bg-red-300 text-center text-black">
+        <span className="text-lg font-semibold">
+          <Link href="/till-salu">truckkort.se är till salu, klicka här</Link>
+        </span>
+      </div>
       <div className="flex justify-between items-center h-full px-4 border-b border-b-gray-300">
         {/* Hamburger Menu for Mobile */}
         <div className="md:hidden items-center">
@@ -126,8 +126,7 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-            }}
-          >
+            }}>
             {isMobileMenuOpen ? (
               // X icon (close)
               <svg
@@ -136,8 +135,7 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
                 viewBox="0 0 24 24"
                 stroke="black"
                 strokeWidth="2"
-                fill="none"
-              >
+                fill="none">
                 <line x1="6" y1="6" x2="18" y2="18" />
                 <line x1="6" y1="18" x2="18" y2="6" />
               </svg>
@@ -149,8 +147,7 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
                 viewBox="0 0 24 24"
                 stroke="black"
                 strokeWidth="2"
-                fill="none"
-              >
+                fill="none">
                 <line x1="4" y1="7" x2="20" y2="7" />
                 <line x1="4" y1="12" x2="20" y2="12" />
                 <line x1="4" y1="17" x2="20" y2="17" />
@@ -161,8 +158,7 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
             className={clsx(
               isMobileMenuOpen ? "md:hidden" : "hidden",
               "absolute left-0 right-0 w-full m-0 p-0 bg-slate-200 mt-3 text-slate-800"
-            )}
-          >
+            )}>
             {orderedMenuItems.map((item, idx) => {
               if (!item) return null;
               const displayName = item.menuDisplay || item.label;
@@ -180,8 +176,7 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
                           <Link
                             href={child.href || "#"}
                             className="block py-2 px-6"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                          >
+                            onClick={() => setIsMobileMenuOpen(false)}>
                             {child.menuDisplay || child.label}
                           </Link>
                         </li>
@@ -197,8 +192,7 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
                   <Link
                     href={item.href || "#"}
                     className="block pt-4 pb-2 px-4"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
+                    onClick={() => setIsMobileMenuOpen(false)}>
                     {displayName}
                   </Link>
                 </li>
@@ -216,8 +210,7 @@ export function Header({ menuItems }: { menuItems: MenuItem[] }) {
         <ul
           className={clsx(
             "hidden md:flex md:flex-row space-x-4 md:block h-full flex items-center"
-          )}
-        >
+          )}>
           {renderMenu(orderedMenuItems)}
         </ul>
       </div>
